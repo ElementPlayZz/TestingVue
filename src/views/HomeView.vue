@@ -70,13 +70,6 @@ function addRestaurant() {
         </select>
       </div>
 
-      <div>
-        <label for="restaurant-diet">Restaurant Diet</label>
-        <select name ="restaurant-status" id="restaurant-status" v-model="newRestaurant.status">
-          <option v-for="status in Object.keys(RestaurantStatusEnum).filter(t=>!isNaN(Number(RestaurantStatusEnum[t])))" :value="status" :key="status"> {{status}} </option>
-        </select>
-      </div>
-
     <button type="submit">Add Restaurant</button>
     </form>
     <ul>
