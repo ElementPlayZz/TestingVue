@@ -7,18 +7,38 @@ interface Restaurant{
   dishes?: Dish[]
 }
 
-type RestaurantStatus =
-    |'Want to Try'
-    |'Recommended'
-    |'Do Not Recommend'
-    |'Must Try'
+interface Dish{
+  name: string,
+  diet?: Diet
+  status?: RecommendStatus
 
-const statusList =[
-  'Want to Try',
-  'Recommended',
-  'Do Not Recommend',
-  'Must Try'
-]
+}
+
+type RestaurantDietStatus = keyof typeof RestaurantDiet
+enum RestaurantDiet{
+  'vegetarian' = 1,
+  'vegan' = 2,
+  'gluten-free' = 3,
+  'pescatarin' = 4,
+  'lactose-free' = 5,
+  'other' = -1
+}
+
+type RestaurantStatus = keyof typeof RestaurantStatusEnum
+
+enum RestaurantStatusEnum{
+  'Do Not Recommend' = -1,
+  'Want to Try' = 0,
+  'Recommended' = 1,
+  'Must Try' = 2
+}
+
+enum RecommendStatus{
+  'Do Not Recommend' = -1,
+  'Want to Try' = 0,
+  'Recommended' = 1,
+  'Must Try' = 2
+}
 
 const restaurantList = ref<Restaurant[]>([])
 const newRestaurant = ref<Restaurant>({})
@@ -26,7 +46,7 @@ const newRestaurant = ref<Restaurant>({})
 function addRestaurant() {
   restaurantList.value.push({
     name: newRestaurant.value.name,
-    status: 'Want to Try',
+    status: newRestaurant.value.status,
     dishes: [],
   })
 }
@@ -46,7 +66,14 @@ function addRestaurant() {
       <div>
         <label for="restaurant-status">Restaurant Status</label>
         <select name ="restaurant-status" id="restaurant-status" v-model="newRestaurant.status">
-          <option v-for='status in statusList' :value="status" :key="status"> {{status}} </option>
+          <option v-for="status in Object.keys(RestaurantStatusEnum).filter(t=>!isNaN(Number(RestaurantStatusEnum[t])))" :value="status" :key="status"> {{status}} </option>
+        </select>
+      </div>
+
+      <div>
+        <label for="restaurant-diet">Restaurant Diet</label>
+        <select name ="restaurant-status" id="restaurant-status" v-model="newRestaurant.status">
+          <option v-for="status in Object.keys(RestaurantStatusEnum).filter(t=>!isNaN(Number(RestaurantStatusEnum[t])))" :value="status" :key="status"> {{status}} </option>
         </select>
       </div>
 
@@ -55,7 +82,7 @@ function addRestaurant() {
     <ul>
       <li v-for="restaurant in restaurantList"
       :key="restaurant.name">
-        {{ restaurant.name   }}
+        {{ restaurant.name   }} - {{ restaurant.status }}
       </li>
     </ul>
   </main>
